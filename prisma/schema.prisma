@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String            @id @default(cuid())
+  clerkId        String            @unique
+  name           String
+  email          String            @unique
+  age            Int?
+  height         Float?
+  weight         Float?
+  dietType       String?           // "vegetarian" | "non-vegetarian"
+  goal           String?           // "muscle_gain" | "fat_loss" | "endurance"
+  workoutTheme   String            @default("saiyan") // "saiyan" | "shinobi" | "hunter" | "sorcerer"
+  level          Int               @default(1)
+  xp             Int               @default(0)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  workoutProgress WorkoutProgress[]
+  exerciseLogs   ExerciseLog[]
+  dietPlans      DietPlan[]
+}
+
+model Exercise {
+  id               String   @id @default(cuid())
+  name             String
+  muscleGroup      String
+  primaryMuscles   String[]
+  secondaryMuscles String[]
+  sets             Int
+  reps             String
+  restSeconds      Int
+  difficulty       String   // "Beginner" | "Intermediate" | "Advanced"
+  equipment        String
+  caloriesBurnPerSet Float
+  animationUrl     String?
+  day              String   // "chest" | "back" | "legs" | "shoulders" | "arms" | "core"
+  themeTag         String[] // which anime themes use this exercise
+}
+
+model WorkoutProgress {
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id])
+  date               DateTime @default(now())
+  workoutCompleted   Boolean  @default(false)
+  caloriesBurned     Float    @default(0)
+  exercisesCompleted Int      @default(0)
+  workoutTheme       String
+  createdAt          DateTime @default(now())
+}
+
+model ExerciseLog {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  exerciseName String
+  sets         Int
+  reps         String
+  completed    Boolean  @default(false)
+  date         DateTime @default(now())
+}
+
+model DietPlan {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  goal          String
+  dietType      String
+  dailyCalories Int
+  protein       String
+  carbs         String
+  fat           String
+  mealPlan      Json
+  createdAt     DateTime @default(now())
+}
