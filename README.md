@@ -90,17 +90,4 @@ prisma/
   schema.prisma         # Database models
 ```
 
-## 🔑 Environment Variables
 
-```env
-DATABASE_URL="postgresql://..."
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-OPENAI_API_KEY=
-```
-
-> **Note**: The app works without an OpenAI API key — it uses built-in fallback data for workout and nutrition plans.
-
-## 📄 License
-
-MIT
